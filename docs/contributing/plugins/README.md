@@ -10,9 +10,9 @@ interact with FL Studio Windows, as well as generator and effect plugins.
 * `WindowPlugin`: Window plugins interact with FL Studio windows
 * `SpecialPlugin`: Plugins that can be active at any time
 
-## Creating a Plugin: The Easy Way
+## Creating Plugin Bindings: The Easy Way
 
-If the standard plugin you are binding to only needs to bind some parameters to
+If the standard plugin you are binding to only needs to bind parameters to
 faders, you can create one by using the `basicPluginBuilder` function. You can
 do this by specifying the names that should be matched for this plugin, as well
 as the list of parameters that should be bound, and a color or list of colors
@@ -28,16 +28,32 @@ basicPluginBuilder(
     # You can add more names after the inner column if multiple plugins use
     # this layout
     ('My plugin name',),
-    # A list of parameter indexes
-    [45, 46, 35, 37, 218, 219, 220, 221],
-    # A color to represent the parameters (this can also be a list)
-    Color.fromInteger(0x206cc8)
+    # A list of parameter indexes - these will map left to write to the 
+    # relevant faders on your device, so in this example tuning will be
+    # fader 1, Waveform will be fader 2, Cutoff will be Fader 3, Resonance
+    # will be Fader 4 and so on.
+    [
+    0,  # Tuning
+    1,  # Waveform
+    2,  # Cutoff
+    4,  # Resonance
+    5,  # Envelope Modulation
+    6,  # Decay
+    7,  # Accent
+    8,  # Volume
+    ]
+    # A color to represent the parameters (this can also be a list, to do so you
+    # would need to list the colour parameters in square brackets with commas between
+    # each parameter - ie ([0x206cc8,0x222222,0x888888,0x206cc8,0x222222])
+    
+    Color.fromInteger(0x206cc8) # this would map all paramters to a single colour
+    
 )
 ```
 
-## Creating a Plugin: The Hard (But More Powerful) Way
+## Creating a Plugin Binding: The Hard (But More Powerful) Way
 
-When a plugin is created, it should bind callback functions to a
+When a plugin binding is created, it should bind callback functions to a
 [`DeviceShadow`](device_shadow.md) object, that represents the plugin's own
 private copy of the device that is being mapped to. This can either be done
 manually, or with [mapping strategies](mapping_strategy.md), given as arguments
